@@ -4,6 +4,9 @@
             ->Image
         ->Delete
         ->Retweet
+            -> read only serializer
+            -> create only serializer
+        ->liking or unlike
 
 2. Users
     ->Register
