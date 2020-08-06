@@ -4,6 +4,7 @@ Social media Web application that uses django and react
 A twitter like web interface having all the basic functionality that includes:
 
  Tweets
+        
         ->Creating
         
             ->Text
