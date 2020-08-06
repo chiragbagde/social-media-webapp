@@ -31,7 +31,43 @@
   </head>
   <body>
     <noscript>You need to enable JavaScript to run this app.</noscript>
-    <div id="tweetme"></div>
+    
+    <!-- <div class='tweetme-detail' data-tweet-id='1' data-class-name="col-6 mx-auto"></div> -->
+    <!-- <div class='tweetme-detail' data-tweet-id='23' data-class-name="col-6 mx-auto"></div> -->
+    <!-- <div class='tweetme-detail' data-tweet-id='101' data-class-name="col-6 mx-auto"></div> -->
+
+    <div id='tweet-container'></div>
+    <div id="tweetme" data-username="chirag" data-can-tweet='false'></div>
+
+    <!-- <script>
+      var path = window.location.pathname
+      var idRegex = /(?<tweetid>\d+)/
+      var match = path.match(idRegex)
+      if (match) {
+        var tweetId = mathc.groups.tweetid
+        var tweetme2E1 = document.getElementById("tweetme")
+        tweetme2E1.className = 'd-none'
+        var tweetEl = "<div class='tweetme-detail' data-tweet-id=" + tweetid + " data-class-name='col-6 mx-auto'></div>"
+        var mainContainer = document.getElementById("tweet-container")
+        mainContainer.innerHTML = tweetEl
+      }
+      </script> -->
+
+      <script>
+        var path = window.location.pathname
+        var idRegex = /(?<tweetid>\d+)/
+        var match = path.match(idRegex)
+        if (match) {
+          var tweetId = match.groups.tweetid
+          var tweeme2El = document.getElementById("tweetme")
+          tweeme2El.className = 'd-none'
+          var tweetEl = "<div class='tweetme-detail' data-tweet-id=" + tweetId + " data-class-name='col-6 mx-auto'></div>"
+          var mainContainer = document.getElementById("tweet-container")
+          mainContainer.innerHTML = tweetEl
+        }
+  
+      </script>
+
     <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
