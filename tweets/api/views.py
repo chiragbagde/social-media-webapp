@@ -6,6 +6,7 @@ from django.utils.http import is_safe_url
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 from ..models import Tweet
 from ..forms import TweetForm
 from ..serializers import (
@@ -15,6 +16,12 @@ from ..serializers import (
         )
 ALLOWED_HOSTS = settings.ALLOWED_HOSTS
 
+def get_paginated_queryset_respsonse(qs, request):
+    paginator = PageNumberPagination()
+    paginator.page_size = 20
+    paginated_qs = paginator.paginate_queryset(qs, request)
+    serializer = TweetSerializer(paginated_qs, many=True)
+    return paginator.get_paginated_response(serializer.data) # Response( serializer.data, status=200)
 
 @api_view(['POST']) # reuquest that client sent is post is interpreted by this.
 
@@ -27,6 +34,13 @@ def tweet_create_view(request, *args, **kwargs):
         return Response(serializer.data, status=201)
     return Response({}, status = 400)
 
+@api_view(['GET']) 
+@permission_classes([IsAuthenticated])
+def tweet_feed_view(request,*args, **kwargs):
+    user = request.user
+    qs = Tweet.objects.feed(user)
+    return get_paginated_queryset_respsonse(qs, request)
+
 @api_view(['GET']) #get request qpi view decorator
 def tweet_detail_view(request,tweet_id, *args, **kwargs):
     qs = Tweet.objects.filter(id=tweet_id)
@@ -35,6 +49,14 @@ def tweet_detail_view(request,tweet_id, *args, **kwargs):
     obj = qs.first()
     serializer = TweetSerializer(obj)
     return Response(serializer.data, status=200)
+
+@api_view(['GET'])
+def tweet_list_view(request, *args, **kwargs):
+    qs = Tweet.objects.all()
+    username = request.GET.get('username')
+    if username != None:
+        qs = qs.by_username(username)
+    return get_paginated_queryset_respsonse(qs, request)
 
 @api_view(['DELETE', 'POST'])
 @permission_classes([IsAuthenticated])
@@ -86,13 +108,5 @@ def tweet_action_view(request, *args, **kwargs):
     return Response({}, status=200)
 
 
-@api_view(['GET'])
-def tweet_list_view(request, *args, **kwargs):
-    qs = Tweet.objects.all()
-    username = request.GET.get('username')
-    if username != None:
-        qs = qs.filter(user__username__iexact=username)
-    serializer = TweetSerializer(qs, many=True)
-    return Response(serializer.data, status=200)
 
 
