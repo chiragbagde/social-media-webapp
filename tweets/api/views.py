@@ -20,7 +20,7 @@ def get_paginated_queryset_respsonse(qs, request):
     paginator = PageNumberPagination()
     paginator.page_size = 20
     paginated_qs = paginator.paginate_queryset(qs, request)
-    serializer = TweetSerializer(paginated_qs, many=True)
+    serializer = TweetSerializer(paginated_qs, many=True, context={'request':request})
     return paginator.get_paginated_response(serializer.data) # Response( serializer.data, status=200)
 
 @api_view(['POST']) # reuquest that client sent is post is interpreted by this.
